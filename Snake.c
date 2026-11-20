@@ -68,4 +68,6 @@ int main() {
     while (1); // Evita que el programa termine de golpe
     
     return 0;
+
+//X COMSOIDFNGSHI 
 }
