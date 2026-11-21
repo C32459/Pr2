@@ -30,44 +30,38 @@ void apagar_led(unsigned int x, unsigned int y, unsigned int apagar){
     boton[y * f + (x - 1)]     = 0; // Arriba-derecha    //leds, pero solo avanza horizontal
     boton[(y + 1) * f + x]     = 0; // Abajo-izquierda
     boton[(y + 1) * f + (x - 1)] = 0; // Abajo-derecha
-    //boton[y * f + x] = 0;
-    //boton[(x+1) * f - y] = 0;
-    //boton[y * LED_MATRIX_0_WIDTH + x] = 0; 
-    //boton[y * LED_MATRIX_0_WIDTH + x] = 0; 
 }
 
 int main() {
     unsigned int color_cian = 0x0000FFFF;
     unsigned int apagar = 0x0000000;
     
-    if(*d_pad_up == 1)
-            led_base -= LED_MATRIX_0_WIDTH; // ir una fila arriba
-        if(*d_pad_do == 1)
-            led_base += LED_MATRIX_0_WIDTH; // ir una fila abajo
-        if(*d_pad_le == 1)
-            led_base -= 1;
-        if(*d_pad_ri == 1)
-            led_base += 1;
-            
-    for (unsigned int y = 0; y < *d_pad_up; y++) {
-        for (unsigned int x = 0; x < *d_pad_do; x++) {
-            pintar_bloque_2x2(*d_pad_le, *d_pad_ri, *led_base);
-            apagar_led(*d_pad_le, *d_pad_ri, *led_base);
+    unsigned int x = 0;
+    unsigned int y = 0;
+    pintar_bloque_2x2(x, y, color_cian);
+
+    while(1){
+        unsigned int mov = 0;
+        if(*d_pad_up == 1 && y > 0){
+            pintar_bloque_2x2(x,y,apagar);
+            y--;
+            mov = 1;
+        }else if(*d_pad_do == 1&& y < LED_MATRIX_0_HEIGHT){
+            pintar_bloque_2x2(x,y,apagar);
+            y++;
+            mov = 1;
+        }else if(*d_pad_le == 1 && x > 0){
+            pintar_bloque_2x2(x,y,apagar);
+            x--;
+            mov = 1;
+        }else if(*d_pad_ri == 1 && x < LED_MATRIX_0_WIDTH){
+            pintar_bloque_2x2(x,y,apagar);
+            x++;
+            mov = 1;
         }
-    }        
-    /*
-    // Recorrer toda la matriz usando HEIGHT y WIDTH
-    for (unsigned int y = 0; y < LED_MATRIX_0_HEIGHT; y++) {
-        for (unsigned int x = 0; x < LED_MATRIX_0_WIDTH; x++) {
-            pintar_bloque_2x2(x, y, color_cian);
-            apagar_led(x, y, apagar);
-        }
-    }
-    */
-    while (1); // Evita que el programa termine de golpe
-    //XD XD
+        if(mov){
+            pintar_bloque_2x2(x,y,color_cian);
+        } 
+    }    
     return 0;
-//jiji
-//X COMSOIDFNGSHI 
-//cambio nuevo
-}
+} 
