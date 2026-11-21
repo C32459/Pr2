@@ -1,9 +1,6 @@
 #include "ripes_system.h"
 
 #define SW0 (0x01)
-#define SW1 (0x02)
-#define SW2 (0x04)
-#define SW3 (0x08)
 
 volatile unsigned int * led_base = (int*) LED_MATRIX_0_BASE;
 volatile unsigned int * d_pad_up = (int*) D_PAD_0_UP;
