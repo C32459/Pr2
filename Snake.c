@@ -1,5 +1,4 @@
 #include "ripes_system.h"
-
 #define SW0 (0x01)
 
 volatile unsigned int * led_base = (int*) LED_MATRIX_0_BASE;
@@ -8,6 +7,7 @@ volatile unsigned int * d_pad_do = (int*) D_PAD_0_DOWN;
 volatile unsigned int * d_pad_le = (int*) D_PAD_0_LEFT;
 volatile unsigned int * d_pad_ri = (int*) D_PAD_0_RIGHT;
 volatile unsigned int * switch_base = (int*) SWITCHES_0_BASE;   
+
 // Función encargada de pintar un LED en (x, y)
 void pintar_bloque_2x2(unsigned int x, unsigned int y, unsigned int color) {
     volatile unsigned int *matriz = (volatile unsigned int *)LED_MATRIX_0_BASE;
