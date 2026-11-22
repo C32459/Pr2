@@ -8,13 +8,8 @@ volatile unsigned int * d_pad_le = (int*) D_PAD_0_LEFT;
 volatile unsigned int * d_pad_ri = (int*) D_PAD_0_RIGHT;
 volatile unsigned int * switch_base = (int*) SWITCHES_0_BASE;   
 
-<<<<<<< HEAD
 // Función encargada de pintar un LED en (x, y)
 void pintar_bloque_2x2(unsigned int x, unsigned int y, unsigned int color) {
-=======
-// Función para pintar un LED en (x, y)
-void pintar_bloque_2x2(int x, int y, unsigned int color) {
->>>>>>> 006dd2f0bed381f815259ed95b5eaa597a5ef7b6
     volatile unsigned int *matriz = (volatile unsigned int *)LED_MATRIX_0_BASE;
      int w = LED_MATRIX_0_WIDTH;
 
