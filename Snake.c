@@ -1,4 +1,6 @@
 #include "ripes_system.h"
+#include <stdlib.h>
+#include <stdio.h>
 #define SW0 (0x01)
 
 volatile unsigned int * led_base = (int*) LED_MATRIX_0_BASE;
@@ -7,6 +9,78 @@ volatile unsigned int * d_pad_do = (int*) D_PAD_0_DOWN;
 volatile unsigned int * d_pad_le = (int*) D_PAD_0_LEFT;
 volatile unsigned int * d_pad_ri = (int*) D_PAD_0_RIGHT;
 volatile unsigned int * switch_base = (int*) SWITCHES_0_BASE;   
+
+
+//AQUI COMIENZA CÓDIGO TEMPORAL DE PRUEBA PARA MANZANAS (Y OTRAS FUNCIONES PREVIAS)
+
+volatile unsigned int *matriz = (volatile unsigned int *)LED_MATRIX_0_BASE;
+
+void iniciar_led(int x, int y, unsigned int color) {
+  int indice = y * LED_MATRIX_0_WIDTH + x;
+  matriz[indice] = color;
+}
+
+void iniciar_snake(unsigned int color) {
+  iniciar_led(LED_MATRIX_0_WIDTH / 2, LED_MATRIX_0_HEIGHT / 2, color);
+}
+
+/* Prueba spawn random
+while (1){
+  int mx = rand() % (LED_MATRIX_0_WIDTH - 2);
+  int my = rand() % (LED_MATRIX_0_HEIGHT - 2);
+      iniciar_led(mx, my, 0x00FF0000); //arriba izquierda
+      iniciar_led(mx + 1, my, 0x00FF0000); //arriba derecha
+      iniciar_led(mx, my + 1, 0x00FF0000); //abajo izquierda
+      iniciar_led(mx + 1, my + 1, 0x00FF0000); // abajo derecha        
+      }
+*/
+
+    int mactiva = 0;
+    int cmnx = 0;
+    int cmny = 0;
+
+void dibujar_manzana(int x, int y) {
+  iniciar_led(x, y, 0x00FF0000); //arriba izquierda
+  iniciar_led(x + 1, y, 0x00FF0000); //arriba derecha
+  iniciar_led(x, y + 1, 0x00FF0000); //abajo izquierda
+  iniciar_led(x + 1, y + 1, 0x00FF0000); //abajo derecha
+}
+
+int manzana_libre(int x, int y) {
+  for (int i = 0; i < 4; i++) {
+    int dx = i % 2;
+    int dy = i / 2;
+    int indice = (y + dy) * LED_MATRIX_0_WIDTH + (x + dx);
+
+    if (matriz[indice] != 0) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
+void spawnear_manzana(void) {
+
+    if (mactiva) {
+    return;
+  }
+
+  int cmx = 0;
+  int cmy = 0;
+
+  do {
+    cmx = rand() % (LED_MATRIX_0_WIDTH - 2);
+    cmy = rand() % (LED_MATRIX_0_HEIGHT - 2);
+  } while (!manzana_libre(cmx, cmy));
+
+  cmnx = cmx;
+  cmny = cmy;
+  mactiva = 1;
+  dibujar_manzana(cmx, cmy);
+}
+
+//AQUI TERMINA CODIGO TEMPORAL DE PRUEBAS PARA MANZANA 
+
 
 // Función encargada de pintar un LED en (x, y)
 void pintar_bloque_2x2(unsigned int x, unsigned int y, unsigned int color) {
@@ -79,5 +153,26 @@ int main() {
         }
     }
    
+
+    //AQUI COMIENZA CODIGO DE PRUEBA MANZANAS
+
+    //Verificación "valor" de led "apagado" o "prendido"
+    int offv = matriz[0];
+    iniciar_led(0, 0, 0x00FF0000);
+    int onv  = matriz[0];
+    printf("%d\n",offv);
+    printf("%d\n",onv);   
+
+    //Prueba spawneo manzana evitando serpiente
+    iniciar_snake(0x0000FFFF);
+
+    while (1) {
+        spawnear_manzana();
+        mactiva = 0;
+    }
+
+  //AQUI TERMINA CODIGO DE PRUEBA MANZANAS
+
+
     return 0;
 } 
