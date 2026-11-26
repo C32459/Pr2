@@ -4,7 +4,6 @@
 #include <stdbool.h>
 
 #define SW0 (0x01)
-#define SW1 (0x02)
 #define LONGITUD 200 //Constante
 
 volatile unsigned int * led_base = (int*) LED_MATRIX_0_BASE;
@@ -21,10 +20,6 @@ int cmny = 0;
 void iniciar_led(int x, int y, unsigned int color){
     int indice = y * LED_MATRIX_0_WIDTH + x;
     matriz[indice] = color;
-}
-
-void iniciar_snake(unsigned int color){
-    iniciar_led(LED_MATRIX_0_WIDTH / 2, LED_MATRIX_0_HEIGHT / 2, color);
 }
 
 // Función para pintar un LED en (x, y)
@@ -101,7 +96,7 @@ void limpiar_matriz(void) {
 } 
 
 int main() {
-    unsigned int color_cian = 0x0000FFFF; //Color para encender el led
+    unsigned int color_snake = 0X20D618; //Color para encender el led
     unsigned int apagar = 0x0000000; //Color para apagar el led
     unsigned int manzana = 0x00FF0000;
     
@@ -138,7 +133,7 @@ int main() {
                 spawnear_manzana();
                 
                 for(int i = 0; i < cola; i++){
-                    pintar_bloque_2x2(x[i], y[i], color_cian);
+                    pintar_bloque_2x2(x[i], y[i], color_snake);
                 }
                 
                 delay();
