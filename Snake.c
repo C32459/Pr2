@@ -152,10 +152,10 @@ int main() {
                 }
                 
                 //Lee el dpad y hace que el movimiento / giro sea de dos leds (para mantener lo que comentó en clase) 
-                if (*d_pad_up == 1) { mov_x = 0;  mov_y = -2; }
-                if (*d_pad_do == 1) { mov_x = 0;  mov_y = 2;  }
-                if (*d_pad_le == 1) { mov_x = -2; mov_y = 0;  }
-                if (*d_pad_ri == 1) { mov_x = 2;  mov_y = 0;  } //2 para alinear leds y evitar que al dar vuelta se conviertan en 3 leds
+                if (*d_pad_up == 1 && mov_y != 2)   { mov_x = 0;  mov_y = -2; }
+                if (*d_pad_do == 1 && mov_y != -2)  { mov_x = 0;  mov_y = 2;  }
+                if (*d_pad_le == 1 && mov_x != 2)   { mov_x = -2; mov_y = 0;  }
+                if (*d_pad_ri == 1 && mov_x != -2)  { mov_x = 2;  mov_y = 0;  }
                 
                 int next_x = x[0] + mov_x;
                 int next_y = y[0] + mov_y;
