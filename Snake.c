@@ -48,7 +48,7 @@ bool revisar_color(int x, int y, unsigned int color){
 
 //Controla / ralentiza la ejecución (velocidad de la serpiente) para dar tiempo al usuario de moverse
 void delay() { 
-    for (volatile int i = 0; i < 40000; i++);
+    for (volatile int i = 0; i < 20000; i++);
 }
 
 //Dibuja la manzana en las coordenadas correspondientes
@@ -60,7 +60,7 @@ void dibujar_manzana(int x, int y){
 }
 
 //Busca un lugar válido (libre) para la manzana
-int manzana_libre(int x, int y){
+int manzana_libre(int x, int y, int snake_x[], int snake_y[], int cola){
     for(int i = 0; i<4; i++){
         int dx = i%2;
         int dy = i / 2;
@@ -70,11 +70,23 @@ int manzana_libre(int x, int y){
             return 0;
         }
     }
+
+
+    for(int i = 0; i < cola; i++){
+        int diff_x = x - snake_x[i];
+        int diff_y = y - snake_y[i];
+        if (diff_x < 0) diff_x = -diff_x;
+        if (diff_y < 0) diff_y = -diff_y;
+
+        if (diff_x < 2 && diff_y < 2){
+            return 0;
+        }
+    }
     return 1;
 }
 
 //Encargada de dibujar manzanas, tras evaluar si no hay otra en la matriz
-void spawnear_manzana(void){
+void spawnear_manzana(int snake_x[],int snake_y[], int cola){
     if(manzana_activa){
         return;
     }
@@ -86,7 +98,7 @@ void spawnear_manzana(void){
         //Se consiguen coordenadas pares (corrección que mencionó en clase)
         coordenada_manzana_x = rand() % ((LED_MATRIX_0_WIDTH - 2)/ 2) * 2; 
         coordenada_manzana_y = rand() % ((LED_MATRIX_0_HEIGHT -2)/ 2) * 2;
-    }while(!manzana_libre(coordenada_manzana_x, coordenada_manzana_y));
+    }while(!manzana_libre(coordenada_manzana_x, coordenada_manzana_y, snake_x, snake_y, cola));
     
     coordenada_manzana_nueva_x = coordenada_manzana_x;
     coordenada_manzana_nueva_y = coordenada_manzana_y;
@@ -139,8 +151,9 @@ int main() {
             
             //Evalua si el jugador no ha perdido y el switch cero no ha sido apagado
             while(!juego_perdido && (*switch_base & SW0)){
-                spawnear_manzana();
+                spawnear_manzana(x,y, cola);
                 
+                //Dibuja la serpiente, ejecuta el delay y apaga leds antes de ir al siguiente paso
                 for(int i = 0; i < cola; i++){
                     pintar_led(x[i], y[i], color_snake);
                 }
@@ -151,7 +164,7 @@ int main() {
                     pintar_led(x[i], y[i], apagar);
                 }
                 
-                //Lee el dpad y hace que el movimiento / giro sea de dos leds (para mantener lo que comentó en clase) 
+                //Lee el dpad y hace que el movimiento / giro sea de dos leds, además de agregar la corrección para giro de 180 grados (para mantener lo que comentó en clase) 
                 if (*d_pad_up == 1 && mov_y != 2)   { mov_x = 0;  mov_y = -2; }
                 if (*d_pad_do == 1 && mov_y != -2)  { mov_x = 0;  mov_y = 2;  }
                 if (*d_pad_le == 1 && mov_x != 2)   { mov_x = -2; mov_y = 0;  }
@@ -206,7 +219,8 @@ int main() {
                     //Al dar otra vuelta, aumentamos/actualizamos los contadores
                     x[0] += mov_x; //nos movemos con la posicion de la cabeza, ese dato guardado anteriormente
                     y[0] += mov_y;
-                
+                    
+                    //Evalua si comió manzana y
                     if (hay_manzana && cola < LONGITUD) {
                         x[cola] = ant_cola_x; //colocamos la nueva zona de la serpiente en su posicion anterior
                         y[cola] = ant_cola_y;
